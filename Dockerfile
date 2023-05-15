@@ -1,6 +1,6 @@
-FROM ubuntu
+FROM ubuntu:20.04
 ARG NGROK_TOKEN
-ARG REGION=jp
+ARG REGION=HK
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y \
     ssh wget unzip vim curl
@@ -12,6 +12,7 @@ RUN mkdir /run/sshd \
     && echo "sleep 5" >> /openssh.sh \
     && echo "curl -s http://localhost:4040/api/tunnels | python3 -c \"import sys, json; print(\\\"ssh连接命令:\\\n\\\",\\\"ssh\\\",\\\"root@\\\"+json.load(sys.stdin)['tunnels'][0]['public_url'][6:].replace(':', ' -p '),\\\"\\\nROOT默认密码:akashi520\\\")\" || echo \"\nError：请检查NGROK_TOKEN变量是否存在，或Ngrok节点已被占用\n\"" >> /openssh.sh \
     && echo '/usr/sbin/sshd -D' >>/openssh.sh \
+    && -tid --name ubuntu --privileged=true ubuntu:20.04  /sbin/init >>/openssh.sh \
     && echo 'PermitRootLogin yes' >>  /etc/ssh/sshd_config  \
     && echo root:akashi520|chpasswd \
     && chmod 755 /openssh.sh
