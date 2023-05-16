@@ -1,4 +1,4 @@
-FROM ubuntu 22.04
+FROM ubuntu
 ARG NGROK_TOKEN
 ARG REGION=jp
 ENV DEBIAN_FRONTEND=noninteractive
